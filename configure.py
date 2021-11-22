@@ -1,4 +1,4 @@
-import platform, csv, os, sys, fileinput, glob
+import platform, csv, os, fileinput, glob
 
 fieldnames = ['enb_id', 'gtp_addr', 'mme_addr', 's1ap_bind_addr', 'x2ap_bind_addr', 'plmn_list', 'dl_earfcn', 'N_RB_DL',
               'n_id_cell', 'cell_id', 'tac', 'root_sequence_index', 'n_id_cell1', 'dl_earfcn1', 'cell_id1', 'tac1', '']
@@ -38,16 +38,20 @@ def show_neighbors(id, base):
         table.close()
 
 
-# todo edit neighbor
 def add_neighbor(base):
     nid = input("New neighbor's cell_id: ")
     base['n_id_cell'] += nid
+    nbase = find_base(nid)
+    nbase['n_id_cell'] += base['enb_id']
+    apply(nbase)
 
 
-# todo edit neighbor
 def delete_neighbor(base):
     nid = input("Deleted neighbor's cell_id: ")
     base['n_id_cell'].replace(nid, "")
+    nbase = find_base(nid)
+    nbase['n_id_cell'].replace(base['enb_id'], "")
+    apply(nbase)
     print('Deleted')
 
 
@@ -82,11 +86,12 @@ def edit_meas(base):
     else:
         for line in fileinput.input(files, inplace=1, backup='.bak'):
             if line.startswith('      measObjectId'):
-                if line == '      measObjectId 1,':     # rewrite for self ids other than 1
+                linelist = line.split(' ')
+                if int(linelist[linelist.index("measObjectId")+1][:-2]) == int(base['enb_id']):
                     self = True
                 else:
                     self = False
-                    neighbor = line.split(' ')[7][:-2]  # praying for consistent idents
+                    neighbor = linelist[linelist.index("measObjectId")+1][:-2]  # praying for consistent \n
                     base = find_base(neighbor)
                 print(line[:-1])
             elif line.startswith('        carrierFreq'):
@@ -98,6 +103,34 @@ def edit_meas(base):
             elif not self:
                 print(line[:-1])
     base = find_base(id)
+    apply(base)
+
+
+def edit_enb(base):
+    files = glob.glob('./**/enb_*.cfg', recursive=True)
+    self = False
+    if not files:
+        print("Error: no enb file")
+    else:
+        for line in fileinput.input(files, inplace=1, backup='.bak'):
+            if line.startswith('  enb_id:'):
+                linelist = line.split(' ')
+                if int(linelist[linelist.index("enb_id:")+1][:-2]) == (base['enb_id']):
+                    self = True
+                else:
+                    break
+                print(line[:-1])
+            elif line.startswith('        carrierFreq'):
+                print('        carrierFreq '+base['dl_earfcn']+',')
+            elif line.startswith('        allowedMeasBandwidth mbw'):
+                print('        allowedMeasBandwidth mbw' + base['N_RB_DL']+',')
+            elif line.startswith('            physCellId'):
+                print('            physCellId ' + base['cell_id']+',')
+            elif not self:
+                print(line[:-1])
+    base = find_base(id)
+    apply(base)
+
 
 def main(id, table):
     base = find_base(id)
@@ -119,26 +152,28 @@ def main(id, table):
                         "\t 5 – apply changes to config file\n"
                         "\t 6 – reset \n"
                         "\t 7 - edit meas_xxx-xxx file \n"
-                        
+                        "\t 8 - edit enb_xxx-xxx file (WIP)\n"
                         "Your option: "))
         os.system('cls' if os.name == 'nt' else 'clear')
 
         if opt == 0:
             my_exit()
-        if opt == 1:
+        elif opt == 1:
             show_other(id)
-        if opt == 2:
+        elif opt == 2:
             show_neighbors(id, base)
-        if opt == 3:
+        elif opt == 3:
             add_neighbor(base)
-        if opt == 4:
+        elif opt == 4:
             delete_neighbor(base)
-        if opt == 5:
+        elif opt == 5:
             apply(base)
-        if opt == 6:
+        elif opt == 6:
             reset()
-        if opt == 7:
+        elif opt == 7:
             edit_meas(base)
+        elif opt == 8:
+            edit_enb(base)
 
 
 if __name__ == '__main__':
