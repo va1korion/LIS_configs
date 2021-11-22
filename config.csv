@@ -1,6 +1,5 @@
-enb_id;gtp_addr;mme_addr;s1ap_bind_addr;x2ap_bind_addr;plmn_list;dl_earfcn;N_RB_DL;n_id_cell;cell_id;tac;root_sequence_index;n_id_cell;dl_earfcn;cell_id;tac;
-1;192.168.1.11;192.168.1.2;192.168.1.11;IP and port;25078;63190;50;10;0x10;0x0360;203;neighbor cell id;frequences (neighbor);0x10;0x0360;
-2;192.168.1.12;192.168.1.2;192.168.1.12;IP and port;25078;63240;50;20;0x20;0x0360;206;neighbor cell id;frequences (neighbor);0x11;0x0360;
-3;192.168.1.13;192.168.1.2;192.168.1.13;IP and port;25078;63290;50;30;0x30;0x0360;209;neighbor cell id;frequences (neighbor);0x12;0x0360;
-4;192.168.1.14;192.168.1.2;192.168.1.14;IP and port;25078;63240;50;40;0x40;0x0360;212;neighbor cell id;frequences (neighbor);0x13;0x0360;
-5;192.168.1.15;192.168.1.2;192.168.1.15;IP and port;25078;63290;50;50;0x50;0x0360;215;neighbor cell id;frequences (neighbor);0x14;0x0360;
+1;192.168.1.11;192.168.1.2;192.168.1.11;IP and port;25078;63190;50;neighbor cell id;0x10;0x0360;203;neighbor cell id;frequences (neighbor);0x10;0x0360;
+2;192.168.1.12;192.168.1.2;192.168.1.12;IP and port;25078;63240;50;neighbor cell id;0x11;0x0360;206;neighbor cell id;frequences (neighbor);0x11;0x0360;
+3;192.168.1.13;192.168.1.2;192.168.1.13;IP and port;25078;63290;50;neighbor cell id;0x12;0x0360;209;neighbor cell id10;frequences (neighbor);0x12;0x0360;
+4;192.168.1.14;192.168.1.2;192.168.1.14;IP and port;25078;63340;50;neighbor cell id;0x13;0x0360;212;neighbor cell id;frequences (neighbor);0x13;0x0360;
+5;192.168.1.15;192.168.1.2;192.168.1.15;IP and port;25078;63350;50;neighbor cell id;0x14;0x0360;215;neighbor cell id;frequences (neighbor);0x14;0x0360;
